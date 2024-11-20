@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midtrans Payment Example</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-E0QL5F9W7DHjgAJ6"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 50%;
+            max-width: 600px;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to Our Store</h1>
+    <p>Click the button below to make a payment</p>
+    <button id="payButton">Pay Now</button>
+</div>
+
+<!-- Modal -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Payment Details</h2>
+        <div id="snap-container"></div>
+    </div>
+</div>
+
+<script>
+    // Function to show modal
+    function openModal() {
+        document.getElementById('paymentModal').style.display = 'flex';
+    }
+
+    // Function to close modal
+    function closeModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    // Button click handler to show modal
+    document.getElementById('payButton').onclick = function () {
+        openModal();
+
+        // Here you will need to provide the payment token generated from your backend
+        // For now, let's assume the token is pre-generated (this should be generated server-side).
+        const paymentToken = "YOUR_PAYMENT_TOKEN";  // Replace with actual token
+
+        // Using Midtrans Snap API to show the payment popup
+        snap.pay(paymentToken, {
+            onSuccess: function (result) {
+                console.log(result);
+                alert("Payment Successful");
+                closeModal();
+            },
+            onPending: function (result) {
+                console.log(result);
+                alert("Waiting for payment confirmation");
+                closeModal();
+            },
+            onError: function (result) {
+                console.log(result);
+                alert("Payment Failed");
+                closeModal();
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
